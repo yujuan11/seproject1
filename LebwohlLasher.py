@@ -29,6 +29,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
+import numba
+from numba import njit
+
 #=======================================================================
 def initdat(nmax):
     """
@@ -128,6 +131,8 @@ def savedat(arr,nsteps,Ts,runtime,ratio,energy,order,nmax):
         print("   {:05d}    {:6.4f} {:12.4f}  {:6.4f} ".format(i,ratio[i],energy[i],order[i]),file=FileOut)
     FileOut.close()
 #=======================================================================
+# one_energy function is called many times, it's suitable to use numba to accelerate it
+@njit
 def one_energy(arr,ix,iy,nmax):
     """
     Arguments:
