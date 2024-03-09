@@ -1,7 +1,15 @@
 Original script:
 LebwohlLasher.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.381, Time: 2.299171 s
 
-setp 1: use numba to accelerate one_energy() function, cause this function is called repeatedly which is perfect to use numba.git
+
+setp 1:
+ use numba to accelerate one_energy() function, cause this function is called repeatedly which is perfect to use numba.git
+
 python LebwohlLasher.py 50 50 0.5 0
 LebwohlLasher.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.353, Time: 0.956316 s
 
+python LebwohlLasher.py 1000 50 0.65 0
+LebwohlLasher.py: Size: 50, Steps: 1000, T*: 0.650: Order: 0.620, Time: 26.485633 s
+
+python original_backup.py 1000 50 0.65 0
+original_backup.py: Size: 50, Steps: 1000, T*: 0.650: Order: 0.542, Time: 68.393555 s
