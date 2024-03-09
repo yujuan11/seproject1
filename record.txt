@@ -1,0 +1,2 @@
+Original script:
+LebwohlLasher.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.381, Time: 2.299171 s
