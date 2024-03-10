@@ -13,3 +13,16 @@ LebwohlLasher.py: Size: 50, Steps: 1000, T*: 0.650: Order: 0.620, Time: 26.48563
 
 python original_backup.py 1000 50 0.65 0
 original_backup.py: Size: 50, Steps: 1000, T*: 0.650: Order: 0.542, Time: 68.393555 s
+
+setp 2: use numba @njit to MC_step(), get_order(), and all_energy() functions. These functions are called above 50 times, using numba to accelerate is a great method.
+There is an error if use @jit to MC_step() function. So use the original MC_step() function. But why can not use @njit to this function?
+
+
+python LebwohlLasher.py 50 50 0.5 0 ( before setp 2)
+LebwohlLasher.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.330, Time: 1.560907 s
+
+python LebwohlLasher.py 50 50 0.5 0
+LebwohlLasher.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.252, Time: 0.536312 s
+
+
+

@@ -167,6 +167,7 @@ def one_energy(arr,ix,iy,nmax):
     en += 0.5*(1.0 - 3.0*np.cos(ang)**2)
     return en
 #=======================================================================
+@njit
 def all_energy(arr,nmax):
     """
     Arguments:
@@ -184,6 +185,7 @@ def all_energy(arr,nmax):
             enall += one_energy(arr,i,j,nmax)
     return enall
 #=======================================================================
+@njit
 def get_order(arr,nmax):
     """
     Arguments:
@@ -212,11 +214,12 @@ def get_order(arr,nmax):
     eigenvalues,eigenvectors = np.linalg.eig(Qab)
     return eigenvalues.max()
 #=======================================================================
-def MC_step(arr,Ts,nmax):
+
+def MC_step(arr, Ts, nmax):
     """
     Arguments:
-	  arr (float(nmax,nmax)) = array that contains lattice data;
-	  Ts (float) = reduced temperature (range 0 to 2);
+      arr (float(nmax,nmax)) = array that contains lattice data;
+      Ts (float) = reduced temperature (range 0 to 2);
       nmax (int) = side length of square lattice.
     Description:
       Function to perform one MC step, which consists of an average
@@ -225,8 +228,8 @@ def MC_step(arr,Ts,nmax):
       ratio for information.  This is the fraction of attempted changes
       that are successful.  Generally aim to keep this around 0.5 for
       efficient simulation.
-	Returns:
-	  accept/(nmax**2) (float) = acceptance ratio for current MCS.
+    Returns:
+      accept/(nmax**2) (float) = acceptance ratio for current MCS.
     """
     #
     # Pre-compute some random numbers.  This is faster than
