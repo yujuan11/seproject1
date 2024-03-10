@@ -32,19 +32,10 @@ Because there is no loop in one_energy() function, no transformation for paralle
 ll_numba.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.326, Time: 0.648689 s
 ll_numba_parallel.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.410, Time: 1.882178 s
 
-WHY IT TAKES MORE TIME AFTER USING PARALLEL NUMBA? TRY BIGGER SIZE:
+Why it takes more time after using parallel numba?  try bigger size
 
 ll_numba.py: Size: 100, Steps: 50, T*: 0.500: Order: 0.308, Time: 0.799972 s
 ll_numba_parallel.py: Size: 100, Steps: 50, T*: 0.500: Order: 0.336, Time: 1.824789 s
-ll_numba.py: Size: 200, Steps: 50, T*: 0.500: Order: 0.288, Time: 1.378121 s
-ll_numba_parallel.py: Size: 200, Steps: 50, T*: 0.500: Order: 0.253, Time: 2.005059 s
-
-WE CAN SEE THE ADVANTAGE OF PARALLEL WHEN SIZE OVER 300.
-
-ll_numba.py: Size: 300, Steps: 50, T*: 0.500: Order: 0.274, Time: 2.515975 s
-ll_numba_parallel.py: Size: 300, Steps: 50, T*: 0.500: Order: 0.299, Time: 2.084997 s
-ll_numba.py: Size: 400, Steps: 50, T*: 0.500: Order: 0.257, Time: 3.839702 s
-ll_numba_parallel.py: Size: 400, Steps: 50, T*: 0.500: Order: 0.264, Time: 2.264800 s
 ll_numba.py: Size: 500, Steps: 50, T*: 0.500: Order: 0.265, Time: 5.646807 s
 ll_numba_parallel.py: Size: 500, Steps: 50, T*: 0.500: Order: 0.257, Time: 2.545981 s
 ll_numba.py: Size: 1000, Steps: 50, T*: 0.500: Order: 0.258, Time: 23.307858 s

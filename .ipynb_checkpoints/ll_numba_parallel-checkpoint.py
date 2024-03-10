@@ -30,7 +30,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 
 import numba
-from numba import njit
+from numba import njit,prange
 
 #=======================================================================
 def initdat(nmax):
@@ -44,7 +44,8 @@ def initdat(nmax):
 	Returns:
 	  arr (float(nmax,nmax)) = array to hold lattice.
     """
-    arr = np.random.random_sample((nmax,nmax))*2.0*np.pi
+    pi_2=2.0*np.pi # @@@ avoid repeated calculation
+    arr = np.random.random_sample((nmax,nmax))*pi_2
     return arr
 #=======================================================================
 def plotdat(arr,pflag,nmax):
@@ -167,6 +168,7 @@ def one_energy(arr,ix,iy,nmax):
     en += 0.5*(1.0 - 3.0*np.cos(ang)**2)
     return en
 #=======================================================================
+@njit(parallel=True)
 def all_energy(arr,nmax):
     """
     Arguments:
@@ -179,11 +181,12 @@ def all_energy(arr,nmax):
 	  enall (float) = reduced energy of lattice.
     """
     enall = 0.0
-    for i in range(nmax):
-        for j in range(nmax):
+    for i in numba.prange(nmax):
+        for j in numba.prange(nmax):
             enall += one_energy(arr,i,j,nmax)
     return enall
 #=======================================================================
+@njit(parallel=True)
 def get_order(arr,nmax):
     """
     Arguments:
@@ -203,20 +206,21 @@ def get_order(arr,nmax):
     # put it in a (3,i,j) array.
     #
     lab = np.vstack((np.cos(arr),np.sin(arr),np.zeros_like(arr))).reshape(3,nmax,nmax)
-    for a in range(3):
-        for b in range(3):
-            for i in range(nmax):
-                for j in range(nmax):
+    for a in numba.prange(3):
+        for b in numba.prange(3):
+            for i in numba.prange(nmax):
+                for j in numba.prange(nmax):
                     Qab[a,b] += 3*lab[a,i,j]*lab[b,i,j] - delta[a,b]
     Qab = Qab/(2*nmax*nmax)
     eigenvalues,eigenvectors = np.linalg.eig(Qab)
     return eigenvalues.max()
 #=======================================================================
-def MC_step(arr,Ts,nmax):
+@njit(parallel=True)
+def MC_step(arr, Ts, nmax):
     """
     Arguments:
-	  arr (float(nmax,nmax)) = array that contains lattice data;
-	  Ts (float) = reduced temperature (range 0 to 2);
+      arr (float(nmax,nmax)) = array that contains lattice data;
+      Ts (float) = reduced temperature (range 0 to 2);
       nmax (int) = side length of square lattice.
     Description:
       Function to perform one MC step, which consists of an average
@@ -225,8 +229,8 @@ def MC_step(arr,Ts,nmax):
       ratio for information.  This is the fraction of attempted changes
       that are successful.  Generally aim to keep this around 0.5 for
       efficient simulation.
-	Returns:
-	  accept/(nmax**2) (float) = acceptance ratio for current MCS.
+    Returns:
+      accept/(nmax**2) (float) = acceptance ratio for current MCS.
     """
     #
     # Pre-compute some random numbers.  This is faster than
@@ -237,9 +241,9 @@ def MC_step(arr,Ts,nmax):
     accept = 0
     xran = np.random.randint(0,high=nmax, size=(nmax,nmax))
     yran = np.random.randint(0,high=nmax, size=(nmax,nmax))
-    aran = np.random.normal(scale=scale, size=(nmax,nmax))
-    for i in range(nmax):
-        for j in range(nmax):
+    aran = np.random.normal(loc=0,scale=scale, size=(nmax,nmax))
+    for i in numba.prange(nmax):
+        for j in numba.prange(nmax):
             ix = xran[i,j]
             iy = yran[i,j]
             ang = aran[i,j]
