@@ -1,5 +1,5 @@
 import sys
-from ll_cython import main 
+from cython_numpy import main 
 
 
 
