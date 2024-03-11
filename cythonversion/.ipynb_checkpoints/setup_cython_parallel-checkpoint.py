@@ -13,14 +13,16 @@ import numpy  # Make sure numpy is installed (pip install numpy)
 
 extensions = [
     Extension(
-        "cython_nochange",
-        sources=["cython_nochange.pyx"],
+        "cython_parallel",
+        sources=["cython_parallel.pyx"],
         include_dirs=[numpy.get_include()],  # This line adds the NumPy include path
-        # Add other compiler flags and options if needed
+        extra_compile_args =['-fopenmp'] ,
+        extra_link_args =['-fopenmp'] ,
     ),
 ]
 
 setup(
+    name='cython_parallel',
     ext_modules=cythonize(extensions,annotate=True)
     # Other setup options
 )

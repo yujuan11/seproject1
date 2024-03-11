@@ -3,6 +3,9 @@
 /* BEGIN: Cython Metadata
 {
     "distutils": {
+        "include_dirs": [
+            "/home/cv23649/anaconda3/lib/python3.11/site-packages/numpy/core/include"
+        ],
         "name": "cython_nochange",
         "sources": [
             "cython_nochange.pyx"
