@@ -1,46 +1,68 @@
 Original script:
 LebwohlLasher.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.381, Time: 2.299171 s
+original_backup.py: Size: 500, Steps: 50, T*: 0.500: Order: 0.265, Time: 334.418559 s
 
-
+-----------------numba-------------------
 setp 1:
  use numba to accelerate one_energy() function, cause this function is called repeatedly which is perfect to use numba.git
 
-python LebwohlLasher.py 50 50 0.5 0
-LebwohlLasher.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.353, Time: 0.956316 s
 
-python LebwohlLasher.py 1000 50 0.65 0
+LebwohlLasher.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.353, Time: 0.956316 s
 LebwohlLasher.py: Size: 50, Steps: 1000, T*: 0.650: Order: 0.620, Time: 26.485633 s
 
-python original_backup.py 1000 50 0.65 0
 original_backup.py: Size: 50, Steps: 1000, T*: 0.650: Order: 0.542, Time: 68.393555 s
 
+-----------------numba-------------------------------------
 setp 2: use numba @njit to MC_step(), get_order(), and all_energy() functions. These functions are called above 50 times, using numba to accelerate is a great method.
 There is an error if use @jit to MC_step() function. So use the original MC_step() function. But why can not use @njit to this function?
 solve: In MC_step() function, add 'loc=0' for this line 'aran = np.random.normal(loc=0,scale=scale, size=(nmax,nmax))'
 
 
-python LebwohlLasher.py 50 50 0.5 0 ( before setp 2)
-LebwohlLasher.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.330, Time: 1.560907 s
 
-python LebwohlLasher.py 50 50 0.5 0
-LebwohlLasher.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.252, Time: 0.646197 s
+ll_numba.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.252, Time: 0.646197 s
 
-
+-------------------------numba parallel--------------------
 step 3: Parallel Numba, numba.prange for loop range in function get_order(), MC_step() and all_energy()
 Because there is no loop in one_energy() function, no transformation for parallel execution was possible in this part. Maybe use loop to calculate the energy array then it is possible to use parallel numba in this function.
 
 ll_numba.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.326, Time: 0.648689 s
 ll_numba_parallel.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.410, Time: 1.882178 s
 
-Why it takes more time after using parallel numba?  try bigger size
+WHY IT TAKES MORE TIME AFTER USING PARALLEL NUMBA? TRY BIGGER SIZE:
 
 ll_numba.py: Size: 100, Steps: 50, T*: 0.500: Order: 0.308, Time: 0.799972 s
 ll_numba_parallel.py: Size: 100, Steps: 50, T*: 0.500: Order: 0.336, Time: 1.824789 s
+ll_numba.py: Size: 200, Steps: 50, T*: 0.500: Order: 0.288, Time: 1.378121 s
+ll_numba_parallel.py: Size: 200, Steps: 50, T*: 0.500: Order: 0.253, Time: 2.005059 s
+
+WE CAN SEE THE ADVANTAGE OF PARALLEL WHEN SIZE OVER 300.
+
+ll_numba.py: Size: 300, Steps: 50, T*: 0.500: Order: 0.274, Time: 2.515975 s
+ll_numba_parallel.py: Size: 300, Steps: 50, T*: 0.500: Order: 0.299, Time: 2.084997 s
+ll_numba.py: Size: 400, Steps: 50, T*: 0.500: Order: 0.257, Time: 3.839702 s
+ll_numba_parallel.py: Size: 400, Steps: 50, T*: 0.500: Order: 0.264, Time: 2.264800 s
 ll_numba.py: Size: 500, Steps: 50, T*: 0.500: Order: 0.265, Time: 5.646807 s
 ll_numba_parallel.py: Size: 500, Steps: 50, T*: 0.500: Order: 0.257, Time: 2.545981 s
 ll_numba.py: Size: 1000, Steps: 50, T*: 0.500: Order: 0.258, Time: 23.307858 s
 ll_numba_parallel.py: Size: 1000, Steps: 50, T*: 0.500: Order: 0.254, Time: 4.822966 s
 
 
+------------cython--------------
+
+
+
+
+
+-------------cython cdef----------------
+
+run_cython.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.313, Time: 2.779956 s
+run_cython.py: Size: 100, Steps: 50, T*: 0.500: Order: 0.275, Time: 10.220724 s
+run_cython.py: Size: 200, Steps: 50, T*: 0.500: Order: 0.267, Time: 34.133776 s
+
+
+
+
+--------cython numpy----------------add three decorator
+run_cython.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.328, Time: 2.602348 s
 
 
