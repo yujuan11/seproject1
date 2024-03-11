@@ -241,8 +241,11 @@ def MC_step(arr, Ts, nmax):
     # with temperature.
     scale = 0.1 + Ts
     accept = 0
-    xran = np.random.randint(0, high=nmax, size=(nmax, nmax))
-    yran = np.random.randint(0, high=nmax, size=(nmax, nmax))
+    array_with_increasing_rows = np.tile(np.arange(10), (10, 1))
+    #xran = np.random.randint(0, high=nmax, size=(nmax, nmax))
+    #yran = np.random.randint(0, high=nmax, size=(nmax, nmax))
+    xran = np.tile(np.arange(nmax), (nmax, 1))
+    yran = np.tile(np.arange(nmax), (nmax, 1))
     aran = np.random.normal(scale=scale, size=(nmax, nmax))
     for i in range(nmax):
         for j in range(nmax):

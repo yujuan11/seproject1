@@ -211,7 +211,9 @@ def get_order(arr, nmax):
     lab = np.vstack((np.cos(arr), np.sin(arr), np.zeros_like(arr))).reshape(3, nmax, nmax)
     for a in range(3):
         for b in range(3):
-            Qab[a, b] += np.sum(3 * lab[a, 0:nmax, 0:nmax] * lab[b, 0:nmax, 0:nmax] - delta[a, b])
+            for i in range(nmax):
+                for j in range(nmax):
+                    Qab[a, b] += 3 * lab[a, i, j] * lab[b, i, j] - delta[a, b]
     Qab = Qab / (2 * nmax * nmax)
     eigenvalues, eigenvectors = np.linalg.eig(Qab)
     return eigenvalues.max()
@@ -241,11 +243,8 @@ def MC_step(arr, Ts, nmax):
     # with temperature.
     scale = 0.1 + Ts
     accept = 0
-    array_with_increasing_rows = np.tile(np.arange(10), (10, 1))
-    #xran = np.random.randint(0, high=nmax, size=(nmax, nmax))
-    #yran = np.random.randint(0, high=nmax, size=(nmax, nmax))
-    xran = np.tile(np.arange(nmax), (nmax, 1))
-    yran = np.tile(np.arange(nmax), (nmax, 1))
+    xran = np.random.randint(0, high=nmax, size=(nmax, nmax))
+    yran = np.random.randint(0, high=nmax, size=(nmax, nmax))
     aran = np.random.normal(scale=scale, size=(nmax, nmax))
     for i in range(nmax):
         for j in range(nmax):
