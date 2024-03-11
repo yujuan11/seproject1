@@ -1,5 +1,8 @@
 Original script:
 LebwohlLasher.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.381, Time: 2.299171 s
+original_backup.py: Size: 100, Steps: 50, T*: 0.500: Order: 0.344, Time: 9.462155 s
+original_backup.py: Size: 200, Steps: 50, T*: 0.500: Order: 0.284, Time: 40.509487 s
+
 original_backup.py: Size: 500, Steps: 50, T*: 0.500: Order: 0.265, Time: 334.418559 s
 
 -----------------numba-------------------
@@ -48,9 +51,9 @@ ll_numba_parallel.py: Size: 1000, Steps: 50, T*: 0.500: Order: 0.254, Time: 4.82
 
 
 ------------cython--------------
-
-
-
+run_cython.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.330, Time: 2.142927 s
+run_cython.py: Size: 100, Steps: 50, T*: 0.500: Order: 0.291, Time: 8.539746 s
+run_cython.py: Size: 200, Steps: 50, T*: 0.500: Order: 0.263, Time: 37.078123 s
 
 
 -------------cython cdef----------------
@@ -59,10 +62,24 @@ run_cython.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.313, Time: 2.779956 s
 run_cython.py: Size: 100, Steps: 50, T*: 0.500: Order: 0.275, Time: 10.220724 s
 run_cython.py: Size: 200, Steps: 50, T*: 0.500: Order: 0.267, Time: 34.133776 s
 
-
-
-
 --------cython numpy----------------add three decorator
 run_cython.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.328, Time: 2.602348 s
+run_cython.py: Size: 100, Steps: 50, T*: 0.500: Order: 0.344, Time: 9.679870 s
+run_cython.py: Size: 200, Steps: 50, T*: 0.500: Order: 0.269, Time: 34.386672 s
+
+-----------cython opemMP-----------
+run_cython_parallel.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.349, Time: 9.676449 s
+run_cython_parallel.py: Size: 100, Steps: 50, T*: 0.500: Order: 0.283, Time: 40.814643 s
+run_cython_parallel.py: Size: 200, Steps: 50, T*: 0.500: Order: 0.265, Time: 171.770427 s
+run_cython_parallel.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.274, Time: 3.036473 s, threads:1
+
+
+---------mpi4py-------------------
+
+
+
+
+
+
 
 
