@@ -159,6 +159,7 @@ def one_energy(arr, ix, iy, nmax):
     # Add together the 4 neighbour contributions
     # to the energy
     #
+    
     ang = arr[ix, iy] - arr[ixp, iy]
     en += 0.5 * (1.0 - 3.0 * np.cos(ang) ** 2)
     ang = arr[ix, iy] - arr[ixm, iy]
@@ -167,6 +168,8 @@ def one_energy(arr, ix, iy, nmax):
     en += 0.5 * (1.0 - 3.0 * np.cos(ang) ** 2)
     ang = arr[ix, iy] - arr[ix, iym]
     en += 0.5 * (1.0 - 3.0 * np.cos(ang) ** 2)
+    
+    
     return en
 
 

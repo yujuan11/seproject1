@@ -68,6 +68,7 @@ run_cython.py: Size: 200, Steps: 50, T*: 0.500: Order: 0.263, Time: 37.078123 s
 run_cython.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.313, Time: 2.779956 s
 run_cython.py: Size: 100, Steps: 50, T*: 0.500: Order: 0.275, Time: 10.220724 s
 run_cython.py: Size: 200, Steps: 50, T*: 0.500: Order: 0.267, Time: 34.133776 s
+run_cython.py: Size: 500, Steps: 50, T*: 0.500: Order: 0.258, Time: 239.154359 s
 
 --------cython numpy----------------add three decorator
 run_cython.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.328, Time: 2.602348 s
@@ -82,6 +83,77 @@ run_cython_parallel.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.274, Time: 3.03
 
 
 ---------mpi4py-------------------
+
+
+
+
+#################################
+--------original----------
+original_backup.py: Size: 10, Steps: 50, T*: 0.500: Order: 0.511, Time: 0.104345 s
+original_backup.py: Size: 30, Steps: 50, T*: 0.500: Order: 0.281, Time: 0.825113 s
+original_backup.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.345, Time: 2.271019 s
+original_backup.py: Size: 60, Steps: 50, T*: 0.500: Order: 0.314, Time: 3.432548 s
+original_backup.py: Size: 100, Steps: 50, T*: 0.500: Order: 0.278, Time: 9.045514 s
+original_backup.py: Size: 300, Steps: 50, T*: 0.500: Order: 0.262, Time: 85.093805 s
+original_backup.py: Size: 500, Steps: 50, T*: 0.500: Order: 0.257, Time: 238.323927 s
+original_backup.py: Size: 600, Steps: 50, T*: 0.500: Order: 0.259, Time: 337.087822 s
+original_backup.py: Size: 1000, Steps: 50, T*: 0.500: Order: 0.258, Time: 964.950696 s
+
+--------------numpy vec----------------------------
+numpy_vec.py: Size: 10, Steps: 50, T*: 0.500: Order: 0.295, Time: 0.079776 s
+numpy_vec.py: Size: 30, Steps: 50, T*: 0.500: Order: 0.257, Time: 0.651291 s
+numpy_vec.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.260, Time: 1.827036 s
+numpy_vec.py: Size: 60, Steps: 50, T*: 0.500: Order: 0.269, Time: 2.560840 s
+numpy_vec.py: Size: 100, Steps: 50, T*: 0.500: Order: 0.255, Time: 7.168643 s
+numpy_vec.py: Size: 300, Steps: 50, T*: 0.500: Order: 0.251, Time: 66.577733 s
+numpy_vec.py: Size: 500, Steps: 50, T*: 0.500: Order: 0.251, Time: 189.987961 s
+numpy_vec.py: Size: 600, Steps: 50, T*: 0.500: Order: 0.252, Time: 265.748078 s
+numpy_vec.py: Size: 1000, Steps: 50, T*: 0.500: Order: 0.250, Time: 930.542168 s
+
+-----------------numba------------------
+
+ll_numba.py: Size: 10, Steps: 50, T*: 0.500: Order: 0.680, Time: 0.478636 s
+ll_numba.py: Size: 30, Steps: 50, T*: 0.500: Order: 0.366, Time: 0.431728 s
+ll_numba.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.336, Time: 0.489747 s
+ll_numba.py: Size: 60, Steps: 50, T*: 0.500: Order: 0.349, Time: 0.469262 s
+ll_numba.py: Size: 100, Steps: 50, T*: 0.500: Order: 0.300, Time: 0.559644 s
+ll_numba.py: Size: 300, Steps: 50, T*: 0.500: Order: 0.300, Time: 1.780302 s
+ll_numba.py: Size: 500, Steps: 50, T*: 0.500: Order: 0.300, Time: 4.120274 s
+ll_numba.py: Size: 600, Steps: 50, T*: 0.500: Order: 0.259, Time: 5.980160 s
+ll_numba.py: Size: 1000, Steps: 50, T*: 0.500: Order: 0.258, Time: 19.497753 s
+ll_numba.py: Size: 3000, Steps: 50, T*: 0.500: Order: 0.251, Time: 219.748886 s
+ll_numba.py: Size: 6000, Steps: 50, T*: 0.500: Order: 0.250, Time: 1032.182340 s
+
+
+----------------numba parallel------------------
+ll_numba_parallel.py: Size: 10, Steps: 50, T*: 0.500: Order: 0.898, Time: 1.863352 s
+ll_numba_parallel.py: Size: 30, Steps: 50, T*: 0.500: Order: 0.546, Time: 1.919434 s
+ll_numba_parallel.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.369, Time: 2.004582 s
+ll_numba_parallel.py: Size: 60, Steps: 50, T*: 0.500: Order: 0.268, Time: 1.985747 s
+ll_numba_parallel.py: Size: 100, Steps: 50, T*: 0.500: Order: 0.285, Time: 2.075729 s
+ll_numba_parallel.py: Size: 300, Steps: 50, T*: 0.500: Order: 0.278, Time: 2.312850 s
+ll_numba_parallel.py: Size: 500, Steps: 50, T*: 0.500: Order: 0.264, Time: 2.743273 s
+ll_numba_parallel.py: Size: 600, Steps: 50, T*: 0.500: Order: 0.268, Time: 3.086665 s
+ll_numba_parallel.py: Size: 1000, Steps: 50, T*: 0.500: Order: 0.257, Time: 5.301149 s
+ll_numba_parallel.py: Size: 3000, Steps: 50, T*: 0.500: Order: 0.252, Time: 41.032406 s
+ll_numba_parallel.py: Size: 6000, Steps: 50, T*: 0.500: Order: 0.251, Time: 171.318565 s
+
+------------------cython---------------------
+run_cython.py: Size: 10, Steps: 50, T*: 0.500: Order: 0.871, Time: 0.176958 s
+run_cython.py: Size: 30, Steps: 50, T*: 0.500: Order: 0.599, Time: 1.418982 s
+run_cython.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.379, Time: 4.109328 s
+run_cython.py: Size: 60, Steps: 50, T*: 0.500: Order: 0.327, Time: 5.709669 s
+run_cython.py: Size: 100, Steps: 50, T*: 0.500: Order: 0.273, Time: 14.279910 s
+run_cython.py: Size: 300, Steps: 50, T*: 0.500: Order: 0.263, Time: 114.448621 s
+run_cython.py: Size: 500, Steps: 50, T*: 0.500: Order: 0.251, Time: 308.576916 s
+run_cython.py: Size: 600, Steps: 50, T*: 0.500: Order: 0.256, Time: 442.087894 s
+run_cython.py: Size: 1000, Steps: 50, T*: 0.500: Order: 0.257, Time: 1357.741122 s
+
+
+
+
+
+
 
 
 

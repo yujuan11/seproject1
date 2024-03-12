@@ -29,6 +29,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
+from mpi4py import MPI
 
 # =======================================================================
 def initdat(nmax):
@@ -160,13 +161,13 @@ def one_energy(arr, ix, iy, nmax):
     # to the energy
     #
     ang = arr[ix, iy] - arr[ixp, iy]
-    en += 0.5 * (1.0 - 3.0 * np.cos(ang) ** 2)
+    en += 0.5 - 1.5 * np.cos(ang) ** 2
     ang = arr[ix, iy] - arr[ixm, iy]
-    en += 0.5 * (1.0 - 3.0 * np.cos(ang) ** 2)
+    en += 0.5 - 1.5  * np.cos(ang) ** 2
     ang = arr[ix, iy] - arr[ix, iyp]
-    en += 0.5 * (1.0 - 3.0 * np.cos(ang) ** 2)
+    en += 0.5 - 1.5  * np.cos(ang) ** 2
     ang = arr[ix, iy] - arr[ix, iym]
-    en += 0.5 * (1.0 - 3.0 * np.cos(ang) ** 2)
+    en += 0.5 - 1.5  * np.cos(ang) ** 2
     return en
 
 
@@ -220,7 +221,7 @@ def get_order(arr, nmax):
 
 
 # =======================================================================
-def MC_step(arr, Ts, nmax):
+def MC_step(arr_p,arr_n ,Ts, nmax):
     """
     Arguments:
 	  arr (float(nmax,nmax)) = array that contains lattice data;
@@ -251,9 +252,9 @@ def MC_step(arr, Ts, nmax):
             ix = xran[i, j]
             iy = yran[i, j]
             ang = aran[i, j]
-            en0 = one_energy(arr, ix, iy, nmax)
-            arr[ix, iy] += ang
-            en1 = one_energy(arr, ix, iy, nmax)
+            en0 = one_energy(arr_p, ix, iy, nmax)
+            arr_n[ix, iy] = arr_p[ix, iy]+ang
+            en1 = one_energy(arr_n, ix, iy, nmax)
             if en1 <= en0:
                 accept += 1
             else:
@@ -264,7 +265,7 @@ def MC_step(arr, Ts, nmax):
                 if boltz >= np.random.uniform(0.0, 1.0):
                     accept += 1
                 else:
-                    arr[ix, iy] -= ang
+                    arr_n[ix, iy] -= ang
     return accept / (nmax * nmax)
 
 
@@ -282,35 +283,81 @@ def main(program, nsteps, nmax, temp, pflag):
     Returns:
       NULL
     """
-    # Create and initialise lattice
-    lattice = initdat(nmax)
-    # Plot initial frame of lattice
-    plotdat(lattice, pflag, nmax)
-    # Create arrays to store energy, acceptance ratio and order parameter
-    energy = np.zeros(nsteps + 1, dtype=np.dtype)
-    ratio = np.zeros(nsteps + 1, dtype=np.dtype)
-    order = np.zeros(nsteps + 1, dtype=np.dtype)
-    # Set initial values in arrays
-    energy[0] = all_energy(lattice, nmax)
-    ratio[0] = 0.5  # ideal value
-    order[0] = get_order(lattice, nmax)
-
+    ## Initialize MPI
+    comm=MPI.COMM_WORLD
+    rank=comm.Get_rank()
+    size=comm.Get_size()
+    
     # Begin doing and timing some MC steps.
     initial = time.time()
-    for it in range(1, nsteps + 1):
-        ratio[it] = MC_step(lattice, temp, nmax)
-        energy[it] = all_energy(lattice, nmax)
-        order[it] = get_order(lattice, nmax)
-    final = time.time()
-    runtime = final - initial
+    if rank==0:
+        # Create and initialise lattice
+        lattice = initdat(nmax)
+        # Plot initial frame of lattice
+        plotdat(lattice, pflag, nmax)
+        # Create arrays to store energy, acceptance ratio and order parameter
+        energy = np.zeros(nsteps + 1, dtype=np.dtype)
+        ratio = np.zeros(nsteps + 1, dtype=np.dtype)
+        order = np.zeros(nsteps + 1, dtype=np.dtype)
+        lattice_steps=np.zeros((nmax,nmax*(nsteps+1))).reshape((nsteps+1),nmax,nmax)
+        lattice_steps[0]=lattice
+        # Set initial values in arrays
+        energy[0] = all_energy(lattice, nmax)
+        ratio[0] = 0.5  # ideal value
+        order[0] = get_order(lattice, nmax)
+        
+        aver=nsteps//(size-1)
+        extra=nsteps%(size-1)
+        offset=0
+        for it in range(1, nsteps + 1):
+                ratio[it] = MC_step(lattice_steps[it-1],lattice_steps[it], temp, nmax)
+        for i in range(1,size):
+            workload=aver
+            if i <=extra:
+                workload+=1
+            comm.send(offset,dest=i,tag=1)
+            comm.send(workload,dest=i,tag=1)
+            comm.send(lattice_steps[offset:offset+workload],dest=i,tag=1)
+            offset+=workload
+        for i in range(1,size):
+            offset=comm.recv( source=i,tag=2)
+            workload=comm.recv( source=i,tag=2)
+            comm.recv( energy[offset:offset+workload],source=i,tag=2)
+            comm.recv( order[offset:offset+workload],source=i,tag=2)
+            
+        
+        final = time.time()
+        runtime = final - initial
 
-    # Final outputs
-    print(
+        # Final outputs
+        print(
         "{}: Size: {:d}, Steps: {:d}, T*: {:5.3f}: Order: {:5.3f}, Time: {:8.6f} s".format(program, nmax, nsteps, temp,
                                                                                            order[nsteps - 1], runtime))
-    # Plot final frame of lattice and generate output file
-    savedat(lattice, nsteps, temp, runtime, ratio, energy, order, nmax)
-    plotdat(lattice, pflag, nmax)
+        # Plot final frame of lattice and generate output file
+        savedat(lattice_steps[-1], nsteps, temp, runtime, ratio, energy, order, nmax)
+        plotdat(lattice_steps[-1], pflag, nmax)
+    
+    
+    elif rank!=0:
+        offset=comm.recv(source=0,tag=1)
+        workload=comm.recv(source=0,tag=1)
+        lattice_steps=np.empty((nmax,nmax*workload), dtype=np.double).reshape(workload,nmax,nmax)
+        comm.recv(lattice_steps,source=0,tag=1)
+        start=offset
+        end=workload
+        print(rank,offset)
+        print(rank,workload)
+        print(rank,len(lattice_steps))
+        energy=np.zeros(start+end, dtype=np.double)
+        order=np.zeros(start+end, dtype=np.double)
+        for i in range(start,start+end):
+            energy[i] = all_energy(lattice_steps[i], nmax)
+            order[i] = get_order(lattice_steps[i], nmax)
+        comm.send(offset, dest=0,tag=2)
+        comm.send(workload, dest=0,tag=2)
+        comm.Send([energy,MPI.DOUBLE], dest=0,tag=2)
+        comm.Send([order,MPI.DOUBLE], dest=0,tag=2)
+    
 
 
 # =======================================================================
