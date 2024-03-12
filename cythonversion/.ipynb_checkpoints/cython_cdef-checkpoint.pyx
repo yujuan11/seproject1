@@ -166,13 +166,15 @@ cdef double one_energy(double[:,:] arr,int ix,int iy,int nmax):
 # Add together the 4 neighbour contributions
 # to the energy
 #
-    cdef:
-        double  ang1 = arr[ix,iy]-arr[ixp,iy]
-        double  ang2 = arr[ix,iy]-arr[ixm,iy]
-        double  ang3 = arr[ix,iy]-arr[ix,iyp]
-        double  ang4 = arr[ix,iy]-arr[ix,iym]
-        double  ang=np.cos(ang1)**2+np.cos(ang2)**2+np.cos(ang3)**2+np.cos(ang4)**2
-    en += 0.5- 1.5*ang
+    cdef double ang=0.0
+    ang = arr[ix, iy] - arr[ixp, iy]
+    en += 0.5 * (1.0 - 3.0 * np.cos(ang) ** 2)
+    ang = arr[ix, iy] - arr[ixm, iy]
+    en += 0.5 * (1.0 - 3.0 * np.cos(ang) ** 2)
+    ang = arr[ix, iy] - arr[ix, iyp]
+    en += 0.5 * (1.0 - 3.0 * np.cos(ang) ** 2)
+    ang = arr[ix, iy] - arr[ix, iym]
+    en += 0.5 * (1.0 - 3.0 * np.cos(ang) ** 2)
     
     return en
 #=======================================================================
