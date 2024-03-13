@@ -30,7 +30,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 
 from mpi4py import MPI
-
+import pickle
 # =======================================================================
 def initdat(nmax):
     """
@@ -296,9 +296,9 @@ def main(program, nsteps, nmax, temp, pflag):
         # Plot initial frame of lattice
         plotdat(lattice, pflag, nmax)
         # Create arrays to store energy, acceptance ratio and order parameter
-        energy = np.zeros(nsteps + 1, dtype=np.dtype)
-        ratio = np.zeros(nsteps + 1, dtype=np.dtype)
-        order = np.zeros(nsteps + 1, dtype=np.dtype)
+        energy = np.empty(nsteps + 1, dtype='d')
+        ratio = np.empty(nsteps + 1, dtype=np.dtype)
+        order = np.empty(nsteps + 1, dtype='d')
         lattice_steps=np.zeros((nmax,nmax*(nsteps+1))).reshape((nsteps+1),nmax,nmax)
         lattice_steps[0]=lattice
         # Set initial values in arrays
@@ -308,7 +308,7 @@ def main(program, nsteps, nmax, temp, pflag):
         
         aver=nsteps//(size-1)
         extra=nsteps%(size-1)
-        offset=0
+        offset=1
         for it in range(1, nsteps + 1):
                 ratio[it] = MC_step(lattice_steps[it-1],lattice_steps[it], temp, nmax)
         for i in range(1,size):
@@ -322,8 +322,14 @@ def main(program, nsteps, nmax, temp, pflag):
         for i in range(1,size):
             offset=comm.recv( source=i,tag=2)
             workload=comm.recv( source=i,tag=2)
-            comm.recv( energy[offset:offset+workload],source=i,tag=2)
-            comm.recv( order[offset:offset+workload],source=i,tag=2)
+            ener=np.empty(nsteps , dtype='d')
+            orde=np.empty(nsteps, dtype='d')
+            ener=comm.recv(source=i,tag=2)
+            orde=comm.recv(source=i,tag=2)
+            
+            for j in range(workload):
+                energy[offset+j]=ener[offset+j]
+                order[offset+j]=orde[offset+j]
             
         
         final = time.time()
@@ -342,21 +348,23 @@ def main(program, nsteps, nmax, temp, pflag):
         offset=comm.recv(source=0,tag=1)
         workload=comm.recv(source=0,tag=1)
         lattice_steps=np.empty((nmax,nmax*workload), dtype=np.double).reshape(workload,nmax,nmax)
-        comm.recv(lattice_steps,source=0,tag=1)
+        lattice_steps=comm.recv(source=0,tag=1)
+        eners=np.empty(nsteps+1, dtype='d')
+        ordes=np.empty(nsteps+1, dtype='d')
         start=offset
         end=workload
         print(rank,offset)
         print(rank,workload)
         print(rank,len(lattice_steps))
-        energy=np.zeros(start+end, dtype=np.double)
-        order=np.zeros(start+end, dtype=np.double)
+        
         for i in range(start,start+end):
-            energy[i] = all_energy(lattice_steps[i], nmax)
-            order[i] = get_order(lattice_steps[i], nmax)
+            eners[i]=all_energy(lattice_steps[i-1], nmax) 
+            ordes[i]=get_order(lattice_steps[i-1], nmax) 
+        
         comm.send(offset, dest=0,tag=2)
         comm.send(workload, dest=0,tag=2)
-        comm.Send([energy,MPI.DOUBLE], dest=0,tag=2)
-        comm.Send([order,MPI.DOUBLE], dest=0,tag=2)
+        comm.Send(eners, dest=0,tag=2)
+        comm.Send(ordes, dest=0,tag=2)
     
 
 

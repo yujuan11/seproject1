@@ -149,16 +149,21 @@ run_cython.py: Size: 500, Steps: 50, T*: 0.500: Order: 0.251, Time: 308.576916 s
 run_cython.py: Size: 600, Steps: 50, T*: 0.500: Order: 0.256, Time: 442.087894 s
 run_cython.py: Size: 1000, Steps: 50, T*: 0.500: Order: 0.257, Time: 1357.741122 s
 
+--------------cython parallel------------
+run_cython_parallel.py: Size: 10, Steps: 50, T*: 0.500: Order: 0.602, Time: 0.133127 s, threads:2
+run_cython_parallel.py: Size: 30, Steps: 50, T*: 0.500: Order: 0.388, Time: 1.191341 s, threads:2
+run_cython_parallel.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.308, Time: 3.479798 s, threads:2
+run_cython_parallel.py: Size: 60, Steps: 50, T*: 0.500: Order: 0.296, Time: 5.251970 s, threads:2
+run_cython_parallel.py: Size: 100, Steps: 50, T*: 0.500: Order: 0.307, Time: 14.812875 s, threads:2
+run_cython_parallel.py: Size: 300, Steps: 50, T*: 0.500: Order: 0.255, Time: 148.859005 s, threads:2
+run_cython_parallel.py: Size: 500, Steps: 50, T*: 0.500: Order: 0.258, Time: 467.939478 s, threads:2
+run_cython_parallel.py: Size: 600, Steps: 50, T*: 0.500: Order: 0.256, Time: 666.446072 s, threads:2
 
-
-
-
-
-
-
-
-
-
-
-
+run_cython_parallel.py: Size: 10, Steps: 50, T*: 0.500: Order: 0.856, Time: 0.313996 s, threads:4
+run_cython_parallel.py: Size: 30, Steps: 50, T*: 0.500: Order: 0.348, Time: 3.117776 s, threads:4
+run_cython_parallel.py: Size: 50, Steps: 50, T*: 0.500: Order: 0.332, Time: 8.968767 s, threads:4
+run_cython_parallel.py: Size: 60, Steps: 50, T*: 0.500: Order: 0.324, Time: 13.378341 s, threads:4
+run_cython_parallel.py: Size: 100, Steps: 50, T*: 0.500: Order: 0.320, Time: 41.890315 s, threads:4
+run_cython_parallel.py: Size: 300, Steps: 50, T*: 0.500: Order: 0.265, Time: 427.351006 s, threads:4
+run_cython_parallel.py: Size: 500, Steps: 50, T*: 0.500: Order: 0.261, Time: 1079.104031 s, threads:4
 
